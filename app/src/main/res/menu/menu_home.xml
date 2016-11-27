@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".actividades.HomeActivity">
+
+    <item
+        android:id="@+id/action_limpiar"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Borrar"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_guardar"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Guardar"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_listado"
+        android:orderInCategory="100"
+        android:title="Listado"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_configuracion"
+        android:orderInCategory="100"
+        android:title="Configuración"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_acerca"
+        android:orderInCategory="100"
+        android:title="Acerca de"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_desloguear"
+        android:orderInCategory="100"
+        android:title="Desloguear"
+        app:showAsAction="never" />
+</menu>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="@string/evitar_suspension"
+        android:title="Evitar la suspensión del dispositivo"
+        >
+    </CheckBoxPreference>
+    <CheckBoxPreference
+        android:key="@string/cargar_multa"
+        android:title="Cargar última multa al inicio"
+        >
+    </CheckBoxPreference>
+</PreferenceScreen>

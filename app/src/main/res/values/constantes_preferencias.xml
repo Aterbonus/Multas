@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="evitar_suspension">evitar_suspension</string>
+    <string name="cargar_multa">cargar_multa</string>
+    <string name="logueado">logueado</string>
+</resources>
