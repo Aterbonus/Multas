@@ -13,7 +13,7 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i;
-        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.logueado), false)) {
+        if(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.api_token), "").length() > 0) {
             i = new Intent(this, HomeActivity.class);
         } else {
             i = new Intent(this, LoginActivity.class);

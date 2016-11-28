@@ -2,5 +2,5 @@
 <resources>
     <string name="evitar_suspension">evitar_suspension</string>
     <string name="cargar_multa">cargar_multa</string>
-    <string name="logueado">logueado</string>
+    <string name="api_token">api_token</string>
 </resources>

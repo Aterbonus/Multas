@@ -6,15 +6,14 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 
-import cl.aterbonus.multas.utilidades.Item;
-import cl.aterbonus.multas.utilidades.Itemizable;
+import cl.aterbonus.multas.utilidades.Identificable;
 
 /**
  * Created by root on 12-10-16.
  */
 
 @DatabaseTable
-public class TipoMulta extends BaseDaoEnabled implements Serializable, Itemizable<Integer, TipoMulta> {
+public class TipoMulta extends BaseDaoEnabled implements Serializable, Identificable<Integer> {
 
     @DatabaseField(generatedId = true)
     private Integer id;
@@ -39,11 +38,6 @@ public class TipoMulta extends BaseDaoEnabled implements Serializable, Itemizabl
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    @Override
-    public Item<Integer, TipoMulta> getItem() {
-        return new Item<>(id, this);
     }
 
     @Override

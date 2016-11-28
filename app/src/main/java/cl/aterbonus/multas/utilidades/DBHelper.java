@@ -22,7 +22,7 @@ import cl.aterbonus.multas.modelos.Usuario;
  */
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
-    private static final String DATABASE_NAME = "multas.db";
+    public static final String DATABASE_NAME = "multas.db";
     private static final int DATABASE_VERSION = 7;
 
     private Dao<Color, Integer> colorDao;
@@ -114,37 +114,37 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, Color.class);
-            Dao<Color, Integer> colorDao = getColorDao();
+            /*Dao<Color, Integer> colorDao = getColorDao();
             for(String color : colores) {
                 Color c = new Color();
                 c.setNombre(color);
                 colorDao.create(c);
-            }
+            }*/
 
             TableUtils.createTable(connectionSource, Marca.class);
-            Dao<Marca, Integer> marcaDao = getMarcaDao();
+            /*Dao<Marca, Integer> marcaDao = getMarcaDao();
             for(String marca : marcas) {
                 Marca m = new Marca();
                 m.setNombre(marca);
                 marcaDao.create(m);
-            }
+            }*/
 
             TableUtils.createTable(connectionSource, TipoMulta.class);
-            Dao<TipoMulta, Integer> tipoMultaDao = getTipoMultaDao();
+            /*Dao<TipoMulta, Integer> tipoMultaDao = getTipoMultaDao();
             for(String tipoMulta : tiposMulta) {
                 TipoMulta tm = new TipoMulta();
                 tm.setNombre(tipoMulta);
                 tipoMultaDao.create(tm);
-            }
+            }*/
 
             TableUtils.createTable(connectionSource, Multa.class);
 
             TableUtils.createTable(connectionSource, Usuario.class);
-            Dao<Usuario, Integer> usuarioDao = getUsuarioDao();
+            /*Dao<Usuario, Integer> usuarioDao = getUsuarioDao();
             Usuario usuario = new Usuario();
             usuario.setUsuario("usuario");
             usuario.setPassword("password");
-            usuarioDao.create(usuario);
+            usuarioDao.create(usuario);*/
         } catch (SQLException e) {
             Log.e(DBHelper.class.getName(), "Imposible crear la base de datos.", e);
         }
