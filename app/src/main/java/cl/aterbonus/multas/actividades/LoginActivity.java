@@ -69,7 +69,8 @@ public class LoginActivity extends AppCompatActivity {
                     super.onSuccess(statusCode, headers, response);
                     if(response != null) {
                         try {
-                            if(!LoginActivity.this.deleteDatabase(DBHelper.DATABASE_NAME)) {
+                            if(LoginActivity.this.databaseList().length > 0
+                                    && !LoginActivity.this.deleteDatabase(DBHelper.DATABASE_NAME)) {
                                 Toast.makeText(LoginActivity.this, "Error al borrar la base de datos", Toast.LENGTH_SHORT).show();
                             }
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();

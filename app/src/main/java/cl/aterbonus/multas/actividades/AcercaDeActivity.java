@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import cl.aterbonus.multas.R;
 
+import static cl.aterbonus.multas.utilidades.Helper.notificacion;
+import static cl.aterbonus.multas.utilidades.Helper.notificacionRoll;
+
 public class AcercaDeActivity extends AppCompatActivity {
 
     @Override
@@ -26,5 +29,7 @@ public class AcercaDeActivity extends AppCompatActivity {
             link.setText(Html.fromHtml(getString(R.string.github_link)));
         }
         link.setMovementMethod(LinkMovementMethod.getInstance());
+
+        notificacionRoll(this, "Tenía que agregar una notificación", "Asi que aquí está. Tarán!");
     }
 }

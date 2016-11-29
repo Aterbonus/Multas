@@ -93,6 +93,8 @@ public class MultaTypeAdapter extends TypeAdapter<Multa> {
                 case "coorLongitud":
                     multa.setCoorLongitud(in.nextString());
                     break;
+                default:
+                    in.skipValue();
             }
         }
         in.endObject();

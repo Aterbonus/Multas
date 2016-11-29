@@ -2,7 +2,6 @@ package cl.aterbonus.multas.actividades;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,18 +24,15 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.j256.ormlite.dao.Dao;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +58,9 @@ import cl.aterbonus.multas.utilidades.Identificable;
 import cl.aterbonus.multas.utilidades.MultaTypeAdapter;
 import cz.msebera.android.httpclient.Header;
 
+import static cl.aterbonus.multas.utilidades.Helper.notificacion;
+import static cl.aterbonus.multas.utilidades.Helper.toast;
+
 public class HomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private final int PETICION_PERMISO_LOCALIZACION = 1;
@@ -76,7 +76,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     private SharedPreferences sharedPreferences;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
-    private Multa ultimaMulta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +128,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         popularMarcaSpinner();
         popularTipoMultaSpinner();
 
-
         if (sharedPreferences.getBoolean(getString(R.string.cargar_multa), false)) {
             cargarMulta();
         }
@@ -139,7 +137,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
-
 
     }
 
@@ -163,7 +160,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 popularSpinner(colorSpinner, colorDao, new String[]{"id", "nombre"});
             }
         } catch (SQLException e) {
-            Toast.makeText(this, "Error al cargar los Colores.", Toast.LENGTH_SHORT).show();
+            toast(this, "Error al cargar los Colores.");
         }
     }
 
@@ -191,7 +188,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         MultasRestClient.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
                 try {
                     Gson gson = new Gson();
                     List<V> objetos = Arrays.asList(gson.fromJson(response.toString(), classArray));
@@ -199,18 +195,17 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                         dao.create(objetos);
                     } catch (SQLException e) {
                         e.printStackTrace();
-                        Toast.makeText(HomeActivity.this, "Error al guardar los datos provenientes del WebService", Toast.LENGTH_SHORT).show();
+                        toast(HomeActivity.this, "Error al guardar los datos provenientes del WebService");
                     }
                     popularSpinner(spinner, objetos);
                 } catch (JsonSyntaxException ex) {
-                    Toast.makeText(HomeActivity.this, "Error al leer los datos provenientes del WebService", Toast.LENGTH_SHORT).show();
+                    toast(HomeActivity.this, "Error al leer los datos provenientes del WebService");
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                Toast.makeText(HomeActivity.this, "Error al cargar los Datos desde el WebService.", Toast.LENGTH_SHORT).show();
+                toast(HomeActivity.this, "Error al cargar los Datos desde el WebService.");
                 try {
                     Log.e("ApiRest", throwable.getMessage() + ":\n" + (errorResponse != null ? errorResponse.toString(4) : null));
                 } catch (JSONException e) {
@@ -220,8 +215,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Toast.makeText(HomeActivity.this, "Error al cargar los Datos desde el WebService.", Toast.LENGTH_SHORT).show();
+                toast(HomeActivity.this, "Error al cargar los Datos desde el WebService.");
                 Log.e("ApiRest", throwable.getMessage() +
                         "\nStatus Code: " + statusCode +
                         "\nHeaders: " + headers +
@@ -240,7 +234,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 popularSpinner(marcaSpinner, marcaDao, new String[]{"id", "nombre"});
             }
         } catch (SQLException ex) {
-            Toast.makeText(this, "Error al cargar las Marcas.", Toast.LENGTH_SHORT).show();
+            toast(this, "Error al cargar las Marcas.");
         }
     }
 
@@ -254,7 +248,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 popularSpinner(tipoMultaSpinner, tipoMultaDao, new String[]{"id", "nombre"});
             }
         } catch (SQLException ex) {
-            Toast.makeText(this, "Error al cargar los Tipos de Multa.", Toast.LENGTH_SHORT).show();
+            toast(this, "Error al cargar los Tipos de Multa.");
         }
     }
 
@@ -302,7 +296,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         String patente = patenteEditText.getText().toString();
         String direccion = direccionEditText.getText().toString();
         if (modelo.isEmpty() || patente.isEmpty() || direccion.isEmpty()) {
-            Toast.makeText(this, "No se permiten campos vacíos. No se ha guardo la multa.", Toast.LENGTH_SHORT).show();
+            toast(this, "No se permiten campos vacíos. No se ha guardo la multa.");
             return;
         }
         Multa multa = new Multa();
@@ -316,7 +310,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         try {
             multa.setFecha(new SimpleDateFormat("dd/MM/yyyy").parse(fechaEditText.getText().toString()));
         } catch (ParseException e) {
-            Toast.makeText(this, "ERROR FECHA", Toast.LENGTH_SHORT).show();
+            toast(this, "ERROR FECHA");
             return;
         }
         if(checkearPermisoGps()) {
@@ -331,7 +325,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             multa.setCoorLongitud("Desconocida");
             multa.setCoorLatitud("Desconocida");
         }
-        ultimaMulta = multa;
         persistirMulta(multa);
     }
 
@@ -343,13 +336,11 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             MultasRestClient.post(this, "multas", gson.toJson(multa), new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    Toast.makeText(HomeActivity.this, "Multa subida al servidor.", Toast.LENGTH_SHORT).show();
+                    toast(HomeActivity.this, "Multa subida al servidor.");
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
                     if(statusCode == 422) {
                         try {
                             Log.e("ApiRest", throwable.getMessage() + ":\n" + errorResponse.toString(4));
@@ -361,22 +352,23 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                         try {
                             Log.e("ApiRest", throwable.getMessage() +
                                     "\nStatus Code: " + statusCode +
-                                    "\nHeaders: " + headers +
+                                    "\nHeaders: " + Arrays.toString(headers) +
                                     "\nRespuesta:\n" + (errorResponse != null ? errorResponse.toString(4) : null));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        toast(HomeActivity.this, "Hubo un error al subir la multa al servidor");
                         persistirMultaLocal(multa);
                     }
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
                     Log.e("ApiRest", throwable.getMessage() +
                             "\nStatus Code: " + statusCode +
-                            "\nHeaders: " + headers +
+                            "\nHeaders: " + Arrays.toString(headers) +
                             "\nResponse String: " + responseString);
+                    toast(HomeActivity.this, "Hubo un error al subir la multa al servidor");
                     persistirMultaLocal(multa);
                 }
             });
@@ -388,12 +380,12 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     private void persistirMultaLocal(Multa multa) {
         try {
             if (helper.getMultaDao().create(multa) > 0) {
-                Toast.makeText(this, "Multa creada con éxito", Toast.LENGTH_SHORT).show();
+                toast(this, "Multa creada con éxito");
             } else {
-                Toast.makeText(this, "Error al crear la Multa", Toast.LENGTH_SHORT).show();
+                toast(this, "Error al crear la Multa");
             }
         } catch (SQLException ex) {
-            Toast.makeText(this, "Error al crear la Multa", Toast.LENGTH_SHORT).show();
+            toast(this, "Error al crear la Multa");
         }
     }
 
@@ -430,6 +422,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             case R.id.action_listado:
                 startActivity(new Intent(this, ListadoActivity.class));
                 return true;
+            case R.id.action_listado_webservice:
+                startActivity(new Intent(this, ListadoWebServiceActivity.class));
+                return true;
             case R.id.action_acerca:
                 startActivity(new Intent(this, AcercaDeActivity.class));
                 return true;
@@ -458,11 +453,10 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this, "Conexión con Google Services fallida.", Toast.LENGTH_SHORT).show();
+        toast(this, "Conexión con Google Services fallida.");
     }
 
     @Override
-    @SuppressWarnings("MissingPermission")
     public void onConnected(Bundle bundle) {
         if (!checkearPermisoGps()) {
             solicitarPermisoGps();
@@ -487,7 +481,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PETICION_PERMISO_LOCALIZACION) {
             if (grantResults.length == 1
@@ -512,6 +506,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onConnectionSuspended(int i) {
-        Toast.makeText(this, "Conexión con Google Services se ha suspendido.", Toast.LENGTH_SHORT).show();
+        toast(this, "Conexión con Google Services se ha suspendido.");
     }
 }

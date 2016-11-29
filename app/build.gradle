@@ -31,5 +31,6 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.android.gms:play-services-location:9.4.0'
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:design:24.0.1'
+    compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
 }

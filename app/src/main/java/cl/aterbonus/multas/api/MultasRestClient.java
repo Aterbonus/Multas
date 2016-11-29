@@ -37,18 +37,17 @@ public class MultasRestClient {
         client.addHeader("Accept", "application/json");
     }
 
-    public static void get(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
-
-        client.get(getAbsoluteUrl(url), params, responseHandler);
+    public static RequestHandle get(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
+        return client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    public static void post(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
-        client.post(getAbsoluteUrl(url), params, responseHandler);
+    public static RequestHandle post(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
+        return client.post(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    public static void post(Context context , String url, String params, JsonHttpResponseHandler responseHandler) throws UnsupportedEncodingException {
+    public static RequestHandle post(Context context , String url, String params, JsonHttpResponseHandler responseHandler) throws UnsupportedEncodingException {
         StringEntity entity = new StringEntity(params);
-        client.post(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
+        return client.post(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
     }
 
     public static void setToken(String token){

@@ -19,6 +19,11 @@
         android:title="Listado"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_listado_webservice"
+        android:orderInCategory="100"
+        android:title="Listado desde el Servidor"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_configuracion"
         android:orderInCategory="100"
         android:title="Configuración"
